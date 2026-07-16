@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Todo List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="header-top">
+            <p class="eyebrow">Organisation</p>
+            <div class="header-actions">
+                <button id="themeToggleBtn" class="secondary-btn theme-toggle" type="button" aria-label="Basculer le mode sombre">🌙</button>
+                <button id="clearCompletedBtn" class="secondary-btn">Effacer terminées</button>
+            </div>
+        </div>
+        <h1>Ma Todo List</h1>
+        <p class="subtitle">Gère tes tâches avec simplicité.</p>
+        <p class="subtitle small">Sauvegardées automatiquement sur ton appareil.</p>
+    </div>
+
+    <div class="input-container">
+        <input type="text" id="taskInput" placeholder="Ajouter une tâche...">
+        <input type="date" id="deadlineInput">
+        <button id="addBtn">Ajouter</button>
+    </div>
+
+    <p id="feedbackMessage" class="feedback-message" aria-live="polite"></p>
+
+    <div class="stats" aria-label="Résumé des tâches">
+        <div class="stat-card">
+            <span class="stat-label">Total</span>
+            <strong id="totalTasks">0</strong>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">En cours</span>
+            <strong id="activeTasks">0</strong>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Terminées</span>
+            <strong id="completedTasks">0</strong>
+        </div>
+    </div>
+
+    <div class="filters" role="toolbar" aria-label="Filtrer les tâches">
+        <button class="filter-btn active" data-filter="all">Toutes</button>
+        <button class="filter-btn" data-filter="active">Actives</button>
+        <button class="filter-btn" data-filter="completed">Terminées</button>
+    </div>
+
+    <ul id="taskList"></ul>
+</div>
+
+<div id="editModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+        <h2 id="modalTitle">Modifier la tâche</h2>
+        <label for="editTaskInput">Titre</label>
+        <input type="text" id="editTaskInput" placeholder="Modifier le titre...">
+        <label for="editDeadlineInput">Deadline</label>
+        <input type="date" id="editDeadlineInput">
+        <div class="modal-actions">
+            <button id="cancelEditBtn" class="secondary-btn">Annuler</button>
+            <button id="saveEditBtn" class="primary-btn">Valider</button>
+        </div>
+    </div>
+</div>
+
+<div id="confirmModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal-content">
+        <h2 id="confirmTitle">Supprimer cette tâche ?</h2>
+        <p>Cette action est irréversible.</p>
+        <div class="modal-actions">
+            <button id="cancelDeleteBtn" class="secondary-btn">Annuler</button>
+            <button id="confirmDeleteBtn" class="primary-btn">Supprimer</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
