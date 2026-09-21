@@ -72,6 +72,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .eyebrow {
@@ -98,6 +99,13 @@ h1 {
 .small {
     font-size: 0.8rem;
     margin-top: 4px;
+}
+
+.current-user {
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-top: 12px;
 }
 
 .input-container {
@@ -146,6 +154,12 @@ h1 {
     display: flex;
     gap: 8px;
     margin: 14px 0 10px;
+}
+
+.task-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin: 2px 0 8px;
 }
 
 .filter-btn {
@@ -393,6 +407,14 @@ body.dark-theme .edit {
     }
 
     .filter-btn {
+        width: 100%;
+    }
+
+    .task-actions {
+        justify-content: stretch;
+    }
+
+    .task-actions .secondary-btn {
         width: 100%;
     }
 

@@ -17,23 +17,80 @@ const saveEditBtn = document.getElementById("saveEditBtn");
 const confirmModal = document.getElementById("confirmModal");
 const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
 const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+const userModal = document.getElementById("userModal");
+const userNameInput = document.getElementById("userNameInput");
+const saveUserBtn = document.getElementById("saveUserBtn");
+const changeUserBtn = document.getElementById("changeUserBtn");
+const currentUserLabel = document.getElementById("currentUserLabel");
 
-function loadTasks() {
+function normalizeUserName(name) {
+    return name.trim().toLocaleLowerCase("fr-FR");
+}
+
+function loadUsersTasks() {
     try {
-        const storedTasks = localStorage.getItem("tasks");
-        return storedTasks ? JSON.parse(storedTasks) : [];
+        const storedTasks = localStorage.getItem("tasksByUser");
+        return storedTasks ? JSON.parse(storedTasks) : {};
     } catch (error) {
         console.warn("Impossible de charger les tâches depuis le stockage local :", error);
-        return [];
+        return {};
     }
 }
 
-let tasks = loadTasks();
+let currentUser = localStorage.getItem("currentUser") || "";
+let tasksByUser = loadUsersTasks();
+let tasks = [];
 let currentFilter = "all";
 let isDarkTheme = localStorage.getItem("theme") === "dark";
 
+function migrateLegacyTasks() {
+    if (!currentUser) {
+        return;
+    }
+
+    const userKey = normalizeUserName(currentUser);
+
+    if (Object.prototype.hasOwnProperty.call(tasksByUser, userKey)) {
+        return;
+    }
+
+    try {
+        const legacyTasks = localStorage.getItem("tasks");
+        tasksByUser[userKey] = legacyTasks ? JSON.parse(legacyTasks) : [];
+        localStorage.setItem("tasksByUser", JSON.stringify(tasksByUser));
+    } catch (error) {
+        tasksByUser[userKey] = [];
+    }
+}
+
+migrateLegacyTasks();
+tasks = currentUser ? (tasksByUser[normalizeUserName(currentUser)] || []) : [];
+
 function saveTasks() {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    if (!currentUser) {
+        return;
+    }
+
+    tasksByUser[normalizeUserName(currentUser)] = tasks;
+    localStorage.setItem("tasksByUser", JSON.stringify(tasksByUser));
+}
+
+function showUserModal() {
+    userModal.classList.remove("hidden");
+    userNameInput.value = currentUser;
+    userNameInput.focus();
+}
+
+function setCurrentUser(name) {
+    currentUser = name.trim();
+    localStorage.setItem("currentUser", currentUser);
+    tasks = tasksByUser[normalizeUserName(currentUser)] || [];
+    currentUserLabel.textContent = `Tâches de ${currentUser}`;
+    userModal.classList.add("hidden");
+    selectedTaskIndex = -1;
+    currentFilter = "all";
+    filterButtons.forEach(button => button.classList.toggle("active", button.dataset.filter === currentFilter));
+    renderTasks();
 }
 
 function getFilteredTasks() {
@@ -70,6 +127,7 @@ function updateStats() {
 function renderTasks() {
     taskList.innerHTML = "";
 
+    currentUserLabel.textContent = currentUser ? `Tâches de ${currentUser}` : "";
     updateStats();
 
     const filteredTasks = getFilteredTasks();
@@ -200,6 +258,27 @@ function addTask() {
 
 addBtn.addEventListener("click", addTask);
 
+saveUserBtn.addEventListener("click", () => {
+    const name = userNameInput.value.trim();
+
+    if (!name) {
+        showFeedback("Veuillez renseigner votre nom.");
+        userNameInput.focus();
+        return;
+    }
+
+    setCurrentUser(name);
+});
+
+changeUserBtn.addEventListener("click", showUserModal);
+
+userNameInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        saveUserBtn.click();
+    }
+});
+
 clearCompletedBtn.addEventListener("click", () => {
     tasks = tasks.filter(task => !task.completed);
     saveTasks();
@@ -304,4 +383,9 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
+applyTheme();
 renderTasks();
+
+if (!currentUser) {
+    showUserModal();
+}

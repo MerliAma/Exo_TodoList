@@ -13,13 +13,14 @@
         <div class="header-top">
             <p class="eyebrow">Organisation</p>
             <div class="header-actions">
+                <button id="changeUserBtn" class="secondary-btn" type="button">Changer d'utilisateur</button>
                 <button id="themeToggleBtn" class="secondary-btn theme-toggle" type="button" aria-label="Basculer le mode sombre">🌙</button>
-                <button id="clearCompletedBtn" class="secondary-btn">Effacer terminées</button>
             </div>
         </div>
         <h1>Ma Todo List</h1>
         <p class="subtitle">Gère tes tâches avec simplicité.</p>
         <p class="subtitle small">Sauvegardées automatiquement sur ton appareil.</p>
+        <p id="currentUserLabel" class="current-user"></p>
     </div>
 
     <div class="input-container">
@@ -51,7 +52,23 @@
         <button class="filter-btn" data-filter="completed">Terminées</button>
     </div>
 
+    <div class="task-actions">
+        <button id="clearCompletedBtn" class="secondary-btn" type="button">Effacer terminées</button>
+    </div>
+
     <ul id="taskList"></ul>
+</div>
+
+<div id="userModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="userModalTitle">
+    <div class="modal-content">
+        <h2 id="userModalTitle">Bienvenue sur ta Todo List</h2>
+        <p>Renseigne ton nom pour retrouver uniquement tes tâches.</p>
+        <label for="userNameInput">Ton nom</label>
+        <input type="text" id="userNameInput" placeholder="Ex. Alex" maxlength="40" autocomplete="name">
+        <div class="modal-actions">
+            <button id="saveUserBtn" class="primary-btn" type="button">Continuer</button>
+        </div>
+    </div>
 </div>
 
 <div id="editModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
